@@ -1,6 +1,7 @@
 # DarkScrape
 
 <img src="/image_1.png" width="100" height="100">
+<img src="/image_1.png" width="100" height="100">
 ![image](/image_1.png)
 -----
 
