@@ -4,7 +4,7 @@
 
 -----
 
-![image](/image_2.png = 500x500)
+![image](/image_2.png =500x500)
 
 -----
 
