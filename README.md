@@ -9,6 +9,16 @@
 - Data is analyzed to represent positive & negative words used in each ticket, using sentiment library
 - Two charts representing the usage of positive & negative words daily and number of tickets posted daily
 
+### Challenges I've faced
+- Using puppeteer inside a docker-container aswell as scraping a tor browser in it
+- Serving the app in a docker-compose environment
+
+
+### Lessons I've learned
+- The efficiency of using a web scraper code for any recurring activity we are doing in the web
+- The convenience of using a docker-compose environment, especially with easing the communication between app's services
+
+
 -------------------------------------------------------
 
 
