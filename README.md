@@ -8,4 +8,5 @@
 
 -----
 
+# Scraper navigates through pages
 ![gif](/scraper/test.gif)
