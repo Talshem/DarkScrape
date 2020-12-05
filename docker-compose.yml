@@ -24,6 +24,8 @@ services:
     build:
       context: "./scraper"
       dockerfile: Dockerfile
+    depends_on: 
+      - torproxy
     
   torproxy:
     image: dperson/torproxy
