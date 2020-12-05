@@ -1,10 +1,10 @@
 # DarkScrape
 
-![image](/image_1.png){:height="700px" width="400px"}
-
+<img src="/image_1.png" width="100" height="100">
+![image](/image_1.png)
 -----
 
-![image](/image_2.png){:class="img-responsive"}
+![image](/image_2.png)
 
 -----
 
