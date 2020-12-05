@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "dotenv": "^8.2.0",
+    "gifencoder": "^2.0.1",
     "mongoose": "^5.11.0",
+    "png-js": "^1.0.0",
     "puppeteer": "^5.2.1"
   }
 }

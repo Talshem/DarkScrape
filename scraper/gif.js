@@ -1,19 +1,45 @@
-const puppeteer = require("puppeteer");
+const fs = require('fs');
+const puppeteer = require('puppeteer');
 const { createPost, findPostsByUrl } = require("./models/post");
+
+const GIFEncoder = require('gifencoder');
+const PNG = require('png-js');
+
+function decode(png) {
+  return new Promise(r => {png.decode(pixels => r(pixels))});
+}
+
+async function gifAddFrame(page, encoder) {
+  const pngBuffer = await page.screenshot({ clip: { width: 1024, height: 768, x: 0, y: 0 } });
+  const png = new PNG(pngBuffer);
+  await decode(png).then(pixels => encoder.addFrame(pixels));
+}
 
 async function darkScrape() {
   try {
     // launches tor browser
     const browser = await puppeteer.launch({
       args: [
-        "--proxy-server=socks5://darkscrape_torproxy_1:9050",
+        "--proxy-server=socks5://127.0.0.1:9050",
         " --no-sandbox",
         // "--disable-setuid-sandbox",
       ],
-      headless:true
+      headless:true,
+      slowMo: 0
     });
 
     const page = await browser.newPage();
+    page.setViewport({width: 1024, height: 768});
+
+
+    var encoder = new GIFEncoder(1024, 768);
+    encoder.createWriteStream()
+    .pipe(fs.createWriteStream('test.gif'));
+
+encoder.start();
+  encoder.setRepeat(0);
+  encoder.setDelay(500);
+  encoder.setQuality(10); 
 
     console.log('Starting...')
 
@@ -35,12 +61,14 @@ async function darkScrape() {
     console.log(`Visits page No.${currentPage}`)
     
       try {
+
+        await gifAddFrame(page, encoder)    
         await page.goto(
           `http://nzxj65x32vh2fkhk.onion/all?page=${currentPage}`
         );
 
         await page.waitForSelector(".btn-success", { visible: true });
-
+        await gifAddFrame(page, encoder)
         // these selectors navigates to each ticket's data page
         let links = await page.$$(".btn-success");
 
@@ -70,16 +98,17 @@ async function darkScrape() {
         for (let link of newLinks) {
 
           console.log(`Gets ticket's data from ${link}`)
-
+        
           await page.goto(link);
 
           await page.waitForSelector(".col-sm-12", { visible: true });
+          await gifAddFrame(page, encoder)
+
 
           // one of these selector contains the ticket's data
           const container = await page.$$eval(".col-sm-12", (content) => {
             // deriving the actual selector that contains the ticket's data
             let element = content.find((e) => e.querySelector("h4"));
-
 
             // derives data according to the database's post schema from the page's content
             return {
@@ -121,7 +150,8 @@ async function darkScrape() {
     await clickTickets(1);
 
     console.log('Done!')
-
+    
+    encoder.finish();
     await browser.close();
   } catch (error) {
     console.log(error);
@@ -135,10 +165,4 @@ function timeOut(time) {
   });
 }
 
-setInterval(() => {
-darkScrape();
-}, 1000*60*2);
-darkScrape();
-
-module.exports = darkScrape;
-
+darkScrape()
